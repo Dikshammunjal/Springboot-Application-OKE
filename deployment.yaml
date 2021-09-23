@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sbapp
+spec:
+  selector:
+    matchLabels:
+      app: sbapp
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: sbapp
+    spec:
+      containers:
+      - name: sbapp
+        image: fra.ocir.io/sehubemeaprod/spring-projects1/spring-boot-hello:latest
+        imagePullPolicy: Always
+        ports:
+        - name: sbapp
+          containerPort: 8080
+          protocol: TCP
+      imagePullSecrets:
+        - name: ocirsecret19
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sbapp-lb
+  labels:
+    app: sbapp
+  annotations:
+    service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "10"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+  selector:
+    app: sbapp
