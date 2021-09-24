@@ -227,17 +227,54 @@ docker ps
 ## 4. Deploy Your Docker Image
 
 #### 1. Create a Docker Repository
+     
+    Create a repo with the your choice of name
+    
+    <repo-name> = <repo-prefix>/<image-name>
+
+    ![image](https://user-images.githubusercontent.com/57708209/134665637-da8dc888-a757-4d96-83b4-69d3292b3811.png)
+
  
 #### 2. Push your Local Image
  
- 1. Open a terminal window.
+ 1. Continue working on the new terminal window.
  2. Log in to OCI Container Registry:
- 3. List your local Docker images:
- 4. Tag your local image with the URL for the registry plus the repo name, so you can push it to that repo.
- 5. Check your Docker images to see if the image is tagged.
- 6. Push the image to Container Registry.
- 7. Open the navigation menu and click Developer Services. Under Containers & Artifacts, click Container Registry.
- 8. Find your image in Container Registry after the push command is complete.
+    ````bash
+    docker login <region-key>.ocir.io
+    ````
+    You are prompted for your login name and password.
+
+	Username: <tenancy-namespace>/<user-name>
+	Password: <auth-token>
+
+  ![image](https://user-images.githubusercontent.com/57708209/134666183-39ac89a3-51f0-406e-a813-b7ce02cecb2a.png)
+
+ 3. Tag your local image with the URL for the registry plus the repo name, so you can push it to that repo.
+   ````bash
+    docker tag <your-local-image> <repo-url>/<repo-name>
+   ````
+   <repo-url>=<region-key>.ocir.io/<tenancy-namespace>
+   <repo-name>=<repo-prefix>/<image-name>
+	   
+    ![image](https://user-images.githubusercontent.com/57708209/134666566-8a2377f6-9635-4ab3-b1b1-786bd598a464.png)
+
+ 4. Check your Docker images to see if the image is tagged.
+    ````bash
+   docker images
+   ````
+   ![image](https://user-images.githubusercontent.com/57708209/134666728-a54dbd5f-3c66-4dc3-9833-bad734e772b1.png)
+	   
+ 5. Push the image to Container Registry
+    ````bash
+    docker push <tagged-image-name>:latest
+    ````
+    
+    ![image](https://user-images.githubusercontent.com/57708209/134666764-6f71f3df-dcb8-4d34-8b35-0756025cbb0c.png)
+
+ 6. Open the navigation menu and click Developer Services. Under Containers & Artifacts, click Container Registry.
+ 7. Find your image in Container Registry after the push command is complete.
+	   ![image](https://user-images.githubusercontent.com/57708209/134666915-b234219c-0396-4a51-82b0-ff8fbe8088cd.png)
+
 
 
 #### 3. Deploy the Image
