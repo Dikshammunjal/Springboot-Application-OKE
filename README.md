@@ -228,11 +228,10 @@ docker ps
 
 #### 1. Create a Docker Repository
      
-    Create a repo with the your choice of name
-    
-    <repo-name> = <repo-prefix>/<image-name>
+ 1. Create a repo with the your choice of name with 'repo-name' = 'repo-prefix'/'image-name'
 
-    ![image](https://user-images.githubusercontent.com/57708209/134665637-da8dc888-a757-4d96-83b4-69d3292b3811.png)
+    ![image](https://user-images.githubusercontent.com/57708209/134667116-282c9751-653b-45ba-886b-7b1e30d461ed.png)
+
 
  
 #### 2. Push your Local Image
@@ -244,8 +243,8 @@ docker ps
     ````
     You are prompted for your login name and password.
 
-	Username: <tenancy-namespace>/<user-name>
-	Password: <auth-token>
+	* Username: 'tenancy-namespace'/'user-name'
+	* Password: 'auth-token'
 
   ![image](https://user-images.githubusercontent.com/57708209/134666183-39ac89a3-51f0-406e-a813-b7ce02cecb2a.png)
 
@@ -253,23 +252,28 @@ docker ps
    ````bash
     docker tag <your-local-image> <repo-url>/<repo-name>
    ````
-   <repo-url>=<region-key>.ocir.io/<tenancy-namespace>
-   <repo-name>=<repo-prefix>/<image-name>
+   
+        *  repo-url ='region-key'.ocir.io/'tenancy-namespace'
+        *  repo-name ='repo-prefix'/'image-name' from step 1 of previous section
 	   
-    ![image](https://user-images.githubusercontent.com/57708209/134666566-8a2377f6-9635-4ab3-b1b1-786bd598a464.png)
+  ![image](https://user-images.githubusercontent.com/57708209/134668039-74746ab8-0755-42fe-9ed2-2aabaad7e038.png)
+
 
  4. Check your Docker images to see if the image is tagged.
+ 
     ````bash
-   docker images
-   ````
-   ![image](https://user-images.githubusercontent.com/57708209/134666728-a54dbd5f-3c66-4dc3-9833-bad734e772b1.png)
+    docker images
+    ````
+   
+  ![image](https://user-images.githubusercontent.com/57708209/134666728-a54dbd5f-3c66-4dc3-9833-bad734e772b1.png)
 	   
  5. Push the image to Container Registry
+    
     ````bash
     docker push <tagged-image-name>:latest
     ````
     
-    ![image](https://user-images.githubusercontent.com/57708209/134666764-6f71f3df-dcb8-4d34-8b35-0756025cbb0c.png)
+  ![image](https://user-images.githubusercontent.com/57708209/134666764-6f71f3df-dcb8-4d34-8b35-0756025cbb0c.png)
 
  6. Open the navigation menu and click Developer Services. Under Containers & Artifacts, click Container Registry.
  7. Find your image in Container Registry after the push command is complete.
@@ -281,18 +285,69 @@ docker ps
  
   1. Create a registry secret for your application. This secret authenticates your image when you deploy it to your cluster.
      To create your secret, fill in the information in this template .
+     ````bash
+     kubectl create secret docker-registry ocirsecret --docker-server=<region-key>.ocir.io  --docker-username='<tenancy-namespace>/<user-name>' --docker-password='<auth-token>'  --docker-email='<email-address>'
+     ````
+     
+     ![image](https://user-images.githubusercontent.com/57708209/134668286-4c305e29-5b5e-45fc-ba37-10ce020a65ea.png)
+
   2. Verify that the secret is created. Issue the following command:
+     ````bash
+     kubectl get secret ocirsecret --output=yaml
+     ````
   3. Determine the host URL to your registry image using the following template:
-  4. On your system, create a file called sb-app.yaml with the following text:
-  5. Deploy your application with the following command.
+     ````bash
+     <region-code>.ocir.io/<tenancy-namespace>/<repo-prefix>/<image-name>:<tag>
+     ````
+  6. On your system, create a file called deployment.yaml with the following text:
+     Replace the following place holders:
+       * your-image-url as per format given in last step
+       * your-secret-name as per used in step2
+
+	
+     
+  8. Deploy your application with the following command.
+     ````bash
+     kubectl create -f sb-app.yaml
+     ````
+     
+     ![image](https://user-images.githubusercontent.com/57708209/134669109-ad15ffa8-c6f3-470e-82d1-9e14df2fd5fc.png)
+
 
 
 
 
 #### 4. Test your App
   1. Check if the load balancer is live:
+  
+     ````bash
+     kubectl get service
+     ````
+     
+     ![image](https://user-images.githubusercontent.com/57708209/134669354-daa0e39a-66e5-4712-93d6-001e44bf771c.png)
+     
+     
+     ![image](https://user-images.githubusercontent.com/57708209/134669454-e1e79a15-3a63-4417-8091-d01b5bb2bb48.png)
+
+
   2. Use the load balancer IP address to connect to your app in a browser:
+  
+   ````bash
+   http://<load-balancer-IP-address>:8080
+   ````
+    
+    
+  ![image](https://user-images.githubusercontent.com/57708209/134669466-229f98d6-f0ab-4ed1-a40a-db4ff779bc1b.png)
+
   3. (Optional) To undeploy your application from the cluster, run the following command:
+  
+  
+  ````bash
+  kubectl delete -f sb-app.yaml
+  ````
+    
+ ![image](https://user-images.githubusercontent.com/57708209/134669499-bb78fe6d-0a6f-4cb0-972e-9ee5cf3c582a.png)
+
 
 
 
