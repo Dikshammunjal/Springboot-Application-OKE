@@ -53,11 +53,17 @@ allow group <the-group-your-username-belongs> to manage compartments in tenancy
   
 ## 3. Build a Local Application
 1. Create a Local Application
-   Make a copy of the Spring Boot Docker guide with Git:
+   
+  1. Make a copy of the Spring Boot Docker guide with Git:
    ```bash
    $ git clone https://github.com/spring-guides/gs-spring-boot-docker.git
    ```
    ![image](https://user-images.githubusercontent.com/57708209/134642325-161b4825-1746-4792-b632-1566e9889dad.png)
+  2. Change into the gs-spring-boot-docker/initial directory
+  3. Change into the Java source directory: src/main/java/hello.
+  4. Update Application.java with the following code:
+
+
    
 2. Run the Local Application
 3. BUild a Docker Image
