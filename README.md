@@ -4,7 +4,7 @@
 
 The purpose of this guide is to describe the steps necessary to configure and deploy the springboot application on an OKE cluster.
 
-> **NOTE**: The guide assumes the user has at least basic knowledge and understanding of **OCI**, **OKE**, **Docker**, **Authorization Token**, **OCID** ,**Service Limits** and is familiar with the tools. 
+> **NOTE**: The guide assumes the user has at least basic knowledge and understanding of **OCI**, **OKE**, **Docker**, **Authorization Token**, **OCID** ,**Service Limits**, **Compartments** and is familiar with the tools. 
 
 
 
@@ -45,11 +45,48 @@ Like Object Storage Namespace, Tenancy OCID, Username, User OCID, Region, Region
 ## 2. Set Up a Cluster
 
 #### 1. Add Compartment policy
+
+If your user is in Administrator's group , you may skip this step
+
+```` bash
 allow group <the-group-your-username-belongs> to manage compartments in tenancy
+````
 #### 2. Create a Compartment
+
+>**NOTE:** Not covered in this guide.
+
 #### 3. Add Resource Policy
+
+If your user is in Administrator's group , you may skip this step
+
+```` bash
+allow group <the-group-your-username-belongs> to manage all-resources in compartment <your-compartment-name>
+````
+
 #### 4. Create a OKE Cluster with 'Quick Create'
+
+>**NOTE:** Not covered in this guide.
+
 #### 5. Set Up Local Access to CLuster
+
+* Create .kube directory and run the commands given under "Access Cluster" Local Access tab
+
+![image](https://user-images.githubusercontent.com/57708209/134658515-fd106e70-322c-4d2c-a457-f9867445502f.png)
+
+![image](https://user-images.githubusercontent.com/57708209/134658649-8e4570fe-7d86-4606-8e90-aee70f020577.png)
+
+* Test your cluster configuration with the following commands
+
+```` bash
+kubectl describe deployment
+````
+
+```` bash
+kubectl get pods
+````
+
+Since no application is deployed, the last two commands produce: "No resources found in default namespace."
+
   
 ## 3. Build a Local Application
  
@@ -57,18 +94,19 @@ allow group <the-group-your-username-belongs> to manage compartments in tenancy
    
   1. Make a copy of the Spring Boot Docker guide with Git:
    ```bash
-   $ git clone https://github.com/spring-guides/gs-spring-boot-docker.git
+   git clone https://github.com/spring-guides/gs-spring-boot-docker.git
    ```
    ![image](https://user-images.githubusercontent.com/57708209/134642325-161b4825-1746-4792-b632-1566e9889dad.png)
   
   2. Change into the gs-spring-boot-docker/initial directory
-     
+     ```` bash
      cd gs-spring-boot-docker/initial
+     ````
   
   3. Change into the Java source directory: src/main/java/hello
-     
+     ````bash
      cd src/main/java/hello
-  
+     ````
   4. Update Application.java with the following code
      ```
      package hello;
@@ -101,12 +139,30 @@ allow group <the-group-your-username-belongs> to manage compartments in tenancy
  1. Change into the gs-spring-boot-docker/initial directory
  
  2. Package the app:
- 
+ ````bash
+ mvn package
+ ````
+ ![image](https://user-images.githubusercontent.com/57708209/134659301-3b776be8-dea0-4073-921a-e88909959f71.png)
+
  3. Run the app:
+ ````bash
+ java -jar target/spring-boot-docker-0.0.1-SNAPSHOT.jar
+ ````
+ 
+ ![image](https://user-images.githubusercontent.com/57708209/134659381-a80722c0-cb2b-4e26-ab90-867ad6f394c5.png)
+
 
  4. Keep the code running and test the app in one of the following ways:
     * In a new terminal connected to your instance, enter the following code:
+      ```bash
+      curl -X GET http://localhost:8080
+      ````
     * Load the following address in a browser:
+      ````bash
+      localhost:8080
+      ````
+      ![image](https://user-images.githubusercontent.com/57708209/134659523-d96b08ad-a72c-4386-bcf5-4a082dbe0e4c.png)
+
  
  5. Stop the running application. Example: Ctrl + C
 
@@ -117,13 +173,56 @@ allow group <the-group-your-username-belongs> to manage compartments in tenancy
  1. Change into the gs-spring-boot-docker/initial directory.
  
  2. Create a file named Dockerfile.
+ ````
+FROM openjdk:8-jdk
+RUN addgroup --system spring && adduser --system spring -ingroup spring
+USER spring:spring
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
+````
 
  3. Build the Docker image:
+ 
+ Make sure docker Desktop is running before you build the image
+ ````bash
+ docker build -t spring-boot-hello .
+ ````
+ 
+ ![image](https://user-images.githubusercontent.com/57708209/134659855-eaf02b85-904e-4243-8fc2-8616994c01df.png)
+ 
+ 4. Check the docker image
+ ````bash
+ docker images
+ ````
+ ![image](https://user-images.githubusercontent.com/57708209/134660146-e1015645-3c14-46f8-bbb7-b3ba7c8df554.png)
 
- 4. Run the Docker image:
+ 5. Run the Docker image:
+ ````bash
+ docker run -p 8080:8080 -t spring-boot-hello
+ ````
+ 
+ ![image](https://user-images.githubusercontent.com/57708209/134660249-7aed25b2-6dd3-4f56-8d4c-627dd004f4f0.png)
+ 
+ 6. Load the following address in a browser :
+ ````bash
+ localhost:8080
+ ````
+ 
+ ![image](https://user-images.githubusercontent.com/57708209/134660363-f617f0ab-d171-4c18-8aef-3a87f1cfaedf.png)
 
- 5. Stop the running application.
 
+ 7. In a new terminal ,  run the below command to see container created
+ 
+ ````bash
+docker ps
+````
+![image](https://user-images.githubusercontent.com/57708209/134660622-a4bf79b4-1d91-4866-bafd-a75bf880ccf9.png)
+
+8. Stop the running application.
+ ````bash
+ docker stop <container_id>
+ ````
   
 ## 4. Deploy Your Docker Image
 
