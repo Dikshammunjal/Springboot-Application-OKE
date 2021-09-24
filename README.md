@@ -65,7 +65,34 @@ allow group <the-group-your-username-belongs> to manage all-resources in compart
 
 #### 4. Create a OKE Cluster with 'Quick Create'
 
->**NOTE:** Not covered in this guide.
+1. Sign in to the Oracle Cloud Infrastructure Console.
+2. Open the navigation menu and click Developer Services. Under Containers & Artifacts, click Kubernetes Clusters (OKE).
+3. Click Create Cluster.
+4. Select Quick Create.
+5. Click Launch Workflow.
+   The Create Cluster dialog is displayed.
+
+6. Fill in the following information.
+  * Name: 'your-cluster-name'
+  * Compartment: 'your-compartment-name'
+  * Kubernetes Version: 'take-default'
+  * Kubernetes API Endpoint: Public Endpoint
+    The Kubernetes cluster is hosted in a public subnet with an auto-assigned public IP address.
+
+ * Kubernetes Worker Nodes: Private Workers
+   The Kubernetes worker nodes are hosted in a private subnet.
+
+ * Shape: VM.Standard.E3.Flex
+ * Number of Nodes: 3
+ * Specify a custom boot volume size: Clear the check box.
+7. Click Next.
+   All your choices are displayed. Review them to ensure that everything is configured correctly.
+
+8. Click Create Cluster.
+   The services set up for your cluster are displayed.
+
+9. Click Close.
+
 
 #### 5. Set Up Local Access to CLuster
 
