@@ -5,6 +5,7 @@
 The purpose of this guide is to describe the steps necessary to configure and deploy the springboot application on an OKE cluster.
 
 > **NOTE**: The guide assumes the user has at least basic knowledge and understanding of **OCI**, **OKE**, **Docker**, **Authorization Token**, **OCID** ,**Service Limits**, **Compartments** and is familiar with the tools. 
+
 > **NOTE**: This guide uses the Windows commands, please be aware if you are using a MacOS or Linux operating system.
 
 
